@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Sparkles, Trophy, Share2, Flame, RefreshCw } from 'lucide-react';
 import { GameArena } from '../components/GameArena';
 import { AdBanner } from '../components/AdBanner';
+import { ForensicScrollLab } from '../components/ForensicScrollLab';
 import { useGame } from '../context/GameContext';
 
 export function GamePage({ onOpenShare, onOpenPricing }) {
@@ -57,7 +58,12 @@ export function GamePage({ onOpenShare, onOpenPricing }) {
       {/* Main Game Arena */}
       <GameArena />
 
-      {/* Google AdSense / Sponsor Banner (Positioned cleanly at the bottom) */}
+      {/* Cinematic Forensic Scroll Lab */}
+      <div className="mt-12">
+        <ForensicScrollLab onPlayNow={() => window.scrollTo({ top: 0, behavior: 'smooth' })} />
+      </div>
+
+      {/* Google AdSense / Sponsor Banner */}
       <div className="mt-8">
         <AdBanner onUpgradeClick={onOpenPricing} />
       </div>
