@@ -16,7 +16,7 @@ import { MindsetGuideModal } from './components/MindsetGuideModal';
 import { X, Lock, Mail, User as UserIcon } from 'lucide-react';
 
 function AppContent() {
-  const [activePage, setActivePage] = useState('home'); // 'home' | 'play' | 'daily' | 'leaderboard' | 'pricing' | 'profile' | 'admin'
+  const [activePage, setActivePage] = useState('play'); // Default directly to instant gameplay!
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authMode, setAuthMode] = useState('login'); // 'login' | 'register'
   const [showShareModal, setShowShareModal] = useState(false);
