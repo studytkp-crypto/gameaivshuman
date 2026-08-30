@@ -45,7 +45,7 @@ export function RevealCard({ revealData, onNextRound, loadingNext }) {
         <div className="w-full md:w-auto flex flex-col items-center gap-1.5 flex-shrink-0">
           <button
             type="button"
-            onClick={onNextRound}
+            onClick={() => onNextRound && onNextRound()}
             disabled={loadingNext}
             className="w-full md:w-auto px-10 py-4 rounded-2xl gradient-btn font-black text-white text-base shadow-2xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3 cursor-pointer"
           >
