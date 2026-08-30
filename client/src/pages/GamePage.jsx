@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
-import { Sparkles, Trophy, Share2, Flame } from 'lucide-react';
+import { Sparkles, Trophy, Share2, Flame, RefreshCw } from 'lucide-react';
 import { GameArena } from '../components/GameArena';
 import { AdBanner } from '../components/AdBanner';
 import { useGame } from '../context/GameContext';
 
 export function GamePage({ onOpenShare, onOpenPricing }) {
-  const { currentRound, fetchNextRound, selectedCategory, setSelectedCategory, streak, totalPlayed, totalCorrect } = useGame();
+  const { currentRound, fetchNextRound, selectedCategory, setSelectedCategory, streak, totalPlayed, totalCorrect, loading } = useGame();
 
   const categories = ['All', 'Animals', 'Portraits', 'Food', 'Architecture', 'Nature', 'Vehicles', 'Cyberpunk', 'Art'];
 
   useEffect(() => {
-    if (!currentRound) {
+    if (!currentRound && !loading) {
       fetchNextRound();
     }
   }, []);
@@ -20,15 +20,13 @@ export function GamePage({ onOpenShare, onOpenPricing }) {
     fetchNextRound(cat);
   };
 
-  const accuracy = totalPlayed > 0 ? Math.round((totalCorrect / totalPlayed) * 100) : 0;
-
   return (
-    <div className="min-h-[85vh] py-4">
+    <div className="min-h-[85vh] py-2">
       
       {/* Category Pills Filter Bar */}
-      <div className="max-w-6xl mx-auto px-4 mb-4 flex items-center justify-between gap-4 flex-wrap">
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none">
-          <span className="text-xs font-mono font-bold text-slate-500 mr-1 hidden sm:inline">MODE:</span>
+      <div className="max-w-6xl mx-auto px-4 mb-3 flex items-center justify-between gap-3 flex-wrap">
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+          <span className="text-[11px] font-mono font-bold text-slate-500 mr-1 hidden sm:inline">CATEGORY:</span>
           {categories.map(cat => (
             <button
               key={cat}
@@ -48,7 +46,7 @@ export function GamePage({ onOpenShare, onOpenPricing }) {
         {totalPlayed > 0 && (
           <button
             onClick={onOpenShare}
-            className="px-3.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-slate-200 flex items-center gap-1.5"
+            className="px-3.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-slate-200 flex items-center gap-1.5 transition-colors"
           >
             <Share2 className="w-3.5 h-3.5 text-brand-cyan" />
             <span>Share Score ({totalCorrect}/{totalPlayed})</span>
@@ -59,8 +57,10 @@ export function GamePage({ onOpenShare, onOpenPricing }) {
       {/* Main Game Arena */}
       <GameArena />
 
-      {/* Google AdSense Placeholder Banner between rounds */}
-      <AdBanner onUpgradeClick={onOpenPricing} />
+      {/* Google AdSense / Sponsor Banner (Positioned cleanly at the bottom) */}
+      <div className="mt-8">
+        <AdBanner onUpgradeClick={onOpenPricing} />
+      </div>
 
     </div>
   );

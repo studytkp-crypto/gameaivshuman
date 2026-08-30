@@ -1,11 +1,11 @@
 import React from 'react';
-import { Eye, Flame, Crown, Trophy, User, LogOut, ShieldCheck, Zap } from 'lucide-react';
+import { Eye, Flame, Crown, Trophy, User, LogOut, ShieldCheck, Zap, Sparkles } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useGame } from '../context/GameContext';
 
 export function Navbar({ activePage, setActivePage, openAuthModal, onOpenMindset }) {
   const { user, logout } = useAuth();
-  const { streak, remainingPlays } = useGame();
+  const { streak, totalPlayed } = useGame();
 
   return (
     <nav className="sticky top-0 z-50 glass-panel border-b border-white/10 px-4 lg:px-8 py-3 transition-all">
@@ -13,7 +13,7 @@ export function Navbar({ activePage, setActivePage, openAuthModal, onOpenMindset
         
         {/* Brand Logo */}
         <div 
-          onClick={() => setActivePage('home')}
+          onClick={() => setActivePage('play')}
           className="flex items-center gap-2.5 cursor-pointer group"
         >
           <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-purple to-brand-cyan flex items-center justify-center shadow-lg shadow-brand-purple/20 group-hover:scale-105 transition-transform">
@@ -35,7 +35,7 @@ export function Navbar({ activePage, setActivePage, openAuthModal, onOpenMindset
               activePage === 'play' ? 'bg-brand-purple text-white shadow-md shadow-brand-purple/30' : 'text-slate-300 hover:text-white hover:bg-white/5'
             }`}
           >
-            🎮 Play
+            🎮 Play Arena
           </button>
           <button
             onClick={() => setActivePage('daily')}
@@ -59,44 +59,29 @@ export function Navbar({ activePage, setActivePage, openAuthModal, onOpenMindset
           >
             <span>🧠</span> <span>AI Hunter's Mindset</span>
           </button>
-          <button
-            onClick={() => setActivePage('pricing')}
-            className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition-all ${
-              activePage === 'pricing' ? 'bg-brand-purple text-white shadow-md shadow-brand-purple/30' : 'text-slate-300 hover:text-white hover:bg-white/5'
-            }`}
-          >
-            💎 Pro Pass ($2.99)
-          </button>
         </div>
 
         {/* Right Stats & Profile */}
         <div className="flex items-center gap-3">
           
-          {/* Streak Indicator */}
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-orange-500/10 border border-orange-500/20 text-orange-400 font-bold text-sm">
+          {/* Live Streak Indicator */}
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-orange-500/10 border border-orange-500/30 text-orange-400 font-bold text-sm shadow-inner">
             <Flame className="w-4 h-4 fill-orange-400 text-orange-400 animate-pulse" />
             <span>{streak}</span>
             <span className="text-[10px] text-orange-300/70 uppercase tracking-wide hidden sm:inline">Streak</span>
           </div>
 
-          {/* Free Plays Badge */}
-          {user?.isPremium ? (
-            <div className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold font-mono">
-              <Crown className="w-3.5 h-3.5" /> PRO PASS
-            </div>
-          ) : (
-            <div className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-slate-300 text-xs font-mono">
-              <span>{remainingPlays}</span>
-              <span className="text-slate-500">/ 10 Free</span>
-            </div>
-          )}
+          {/* 100% Free Badge */}
+          <div className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold font-mono">
+            <span>✨ 100% FREE</span>
+          </div>
 
           {/* User Auth / Profile Dropdown */}
           {user ? (
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setActivePage('profile')}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 hover:border-brand-purple text-sm font-semibold text-white transition-colors"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-brand-purple text-sm font-semibold text-white transition-colors"
               >
                 <span>{user.avatar || '🕵️'}</span>
                 <span className="hidden sm:inline text-xs">{user.name}</span>
@@ -104,7 +89,7 @@ export function Navbar({ activePage, setActivePage, openAuthModal, onOpenMindset
               {user.role === 'admin' && (
                 <button
                   onClick={() => setActivePage('admin')}
-                  className="p-1.5 rounded-lg bg-purple-500/10 border border-purple-500/30 text-purple-300 hover:text-white"
+                  className="p-1.5 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-300 hover:text-white"
                   title="Admin Dashboard"
                 >
                   <ShieldCheck className="w-4 h-4" />
@@ -112,7 +97,7 @@ export function Navbar({ activePage, setActivePage, openAuthModal, onOpenMindset
               )}
               <button
                 onClick={logout}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
+                className="p-1.5 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
                 title="Sign Out"
               >
                 <LogOut className="w-4 h-4" />
@@ -122,15 +107,15 @@ export function Navbar({ activePage, setActivePage, openAuthModal, onOpenMindset
             <div className="flex items-center gap-2">
               <button
                 onClick={() => openAuthModal('login')}
-                className="px-3.5 py-1.5 rounded-lg text-sm font-semibold text-slate-200 hover:text-white hover:bg-white/5 transition-colors"
+                className="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5 transition-colors border border-white/5"
               >
                 Sign In
               </button>
               <button
                 onClick={() => openAuthModal('register')}
-                className="px-4 py-1.5 rounded-lg text-sm font-bold text-white gradient-btn shadow-sm"
+                className="px-3.5 py-1.5 rounded-xl text-xs font-bold text-white gradient-btn shadow-md"
               >
-                Join Free
+                Save Stats
               </button>
             </div>
           )}
