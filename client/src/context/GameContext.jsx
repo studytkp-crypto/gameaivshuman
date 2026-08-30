@@ -1,117 +1,116 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
-import { API } from '../services/api';
 import { sound } from '../services/soundFx';
 import { useAuth } from './AuthContext';
 
-const CLIENT_ROUNDS = [
+export const GAME_ROUNDS = [
   {
-    id: 'round-animals-1',
+    id: 'round-1',
     category: 'Animals',
     imageAUrl: 'https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=800&q=80',
     imageBUrl: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80',
     aiSlot: 'B',
-    prompt: 'A joyful golden retriever sitting on dewy green grass in a sunny park with soft cinematic bokeh and perfect glossy fur.',
-    realSource: 'Unsplash / Eric Ward (Real Photo)',
-    aiClues: 'Look closely at the ear fur highlights and perfectly symmetrical whiskers on Image B — typical diffusion rendering smoothing.',
+    prompt: 'A joyful golden retriever sitting on dewy green grass in a sunny park with soft cinematic bokeh and glossy fur.',
+    realSource: 'Unsplash / Eric Ward (Real Wildlife Photography)',
+    aiClues: 'Look closely at Image B: the whiskers are perfectly symmetrical and ear highlights show neural smoothing artifacts.',
     difficulty: 'medium'
   },
   {
-    id: 'round-portraits-1',
+    id: 'round-2',
     category: 'Portraits',
-    imageAUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',
-    imageBUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80',
+    imageAUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80',
+    imageBUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',
     aiSlot: 'A',
     prompt: 'Studio portrait of a woman with freckles and amber eyes under warm golden hour rim lighting, 85mm lens f/1.4.',
-    realSource: 'Unsplash / Jurica Koletić (Real Photo)',
-    aiClues: 'Image A exhibits hyper-uniform skin pores and slightly inconsistent earring reflections on the left lobe.',
+    realSource: 'Unsplash / Jurica Koletić (Authentic Studio Portrait)',
+    aiClues: 'Image A has hyper-uniform skin pores and slightly inconsistent earring reflections on the left lobe.',
     difficulty: 'hard'
   },
   {
-    id: 'round-food-1',
+    id: 'round-3',
     category: 'Food',
     imageAUrl: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80',
     imageBUrl: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=800&q=80',
     aiSlot: 'B',
     prompt: 'Artisanal brioche double cheeseburger with melting cheddar, caramelized onions, and crisp lettuce on dark rustic slate.',
-    realSource: 'Unsplash / Amirali Mirhashemian (Real Photo)',
+    realSource: 'Unsplash / Amirali Mirhashemian (Authentic Food Photography)',
     aiClues: 'The sesame seeds on the bun in Image B follow an unnaturally repetitive geometric alignment with identical specular reflections.',
     difficulty: 'easy'
   },
   {
-    id: 'round-arch-1',
+    id: 'round-4',
     category: 'Architecture',
     imageAUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80',
     imageBUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80',
     aiSlot: 'B',
     prompt: 'Ultra-modern Scandinavian minimalist living room with floor-to-ceiling glass windows overlooking a snowy pine forest.',
-    realSource: 'Unsplash / Patrick Perkins (Real Photo)',
+    realSource: 'Unsplash / Patrick Perkins (Authentic Architecture Photo)',
     aiClues: 'In Image B, the window mullions do not align precisely with the exterior snow reflections and floor shadows.',
     difficulty: 'medium'
   },
   {
-    id: 'round-nature-1',
+    id: 'round-5',
     category: 'Nature',
     imageAUrl: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80',
     imageBUrl: 'https://images.unsplash.com/photo-1511884642898-4c92249e20b6?auto=format&fit=crop&w=800&q=80',
     aiSlot: 'B',
     prompt: 'Pristine mountain alpine lake reflecting snow-capped jagged peaks at sunrise with violet mist and wild lupines.',
-    realSource: 'Unsplash / Bailey Zindel (Real Photo)',
+    realSource: 'Unsplash / Bailey Zindel (Authentic Nature Capture)',
     aiClues: 'Image B water ripples show impossible wave interference patterns that contradict the wind direction shown in the trees.',
     difficulty: 'hard'
   },
   {
-    id: 'round-vehicles-1',
+    id: 'round-6',
     category: 'Vehicles',
-    imageAUrl: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80',
-    imageBUrl: 'https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=800&q=80',
+    imageAUrl: 'https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=800&q=80',
+    imageBUrl: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80',
     aiSlot: 'A',
     prompt: 'Sleek matte black aerodynamic electric supercar speeding down wet asphalt highway under neon city streetlights at dusk.',
-    realSource: 'Unsplash / Campbell (Real Photo)',
+    realSource: 'Unsplash / Campbell (Authentic Automotive Photography)',
     aiClues: 'Image A has slightly warped wheel rim spokes and asymmetric headlight internal lens elements.',
     difficulty: 'medium'
   },
   {
-    id: 'round-cyber-1',
+    id: 'round-7',
     category: 'Cyberpunk',
     imageAUrl: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=800&q=80',
     imageBUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80',
     aiSlot: 'B',
     prompt: 'Futuristic neo-Tokyo rain-slicked alleyway with holographic billboards, neon purple steam, and flying drone taxis.',
-    realSource: 'Unsplash / Aleksandar Pasaric (Real Photo)',
-    aiClues: 'The Japanese kanji characters on the neon signs in Image B are gibberish pseudo-glyphs generated by the neural network.',
+    realSource: 'Unsplash / Aleksandar Pasaric (Authentic Urban Photography)',
+    aiClues: 'The Japanese kanji characters on the neon signs in Image B are gibberish pseudo-glyphs generated by neural diffusion.',
     difficulty: 'easy'
   },
   {
-    id: 'round-art-1',
+    id: 'round-8',
     category: 'Art',
-    imageAUrl: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80',
-    imageBUrl: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=800&q=80',
+    imageAUrl: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=800&q=80',
+    imageBUrl: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80',
     aiSlot: 'A',
     prompt: 'Surrealist Renaissance oil painting with rich impasto brushstrokes, golden baroque frame, and textured canvas cracks.',
-    realSource: 'Unsplash / Europeana (Real Museum Artifact)',
+    realSource: 'Unsplash / Europeana (Museum Artifact Capture)',
     aiClues: 'Digital brushstrokes in Image A lack authentic three-dimensional paint depth and shadow occlusions.',
     difficulty: 'hard'
   },
   {
-    id: 'round-animals-2',
+    id: 'round-9',
     category: 'Animals',
-    imageAUrl: 'https://images.unsplash.com/photo-1474511320723-9a56873867b5?auto=format&fit=crop&w=800&q=80',
-    imageBUrl: 'https://images.unsplash.com/photo-1516934024742-b461fba47600?auto=format&fit=crop&w=800&q=80',
+    imageAUrl: 'https://images.unsplash.com/photo-1516934024742-b461fba47600?auto=format&fit=crop&w=800&q=80',
+    imageBUrl: 'https://images.unsplash.com/photo-1474511320723-9a56873867b5?auto=format&fit=crop&w=800&q=80',
     aiSlot: 'A',
     prompt: 'Majestic red fox with bushy white-tipped tail standing alert in powdered deep snow under soft winter morning glow.',
-    realSource: 'Unsplash / Ray Hennessy (Real Wildlife Photo)',
+    realSource: 'Unsplash / Ray Hennessy (Authentic Wildlife Photography)',
     aiClues: 'Image A has whiskers that cross in an unnatural lattice grid pattern against the dark background.',
     difficulty: 'medium'
   },
   {
-    id: 'round-portraits-2',
+    id: 'round-10',
     category: 'Portraits',
     imageAUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80',
     imageBUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80',
     aiSlot: 'B',
     prompt: 'Close-up portrait of a 40-year-old architect with salt-and-pepper beard, smiling naturally against an industrial brick wall.',
-    realSource: 'Unsplash / Joseph Gonzalez (Real Photo)',
+    realSource: 'Unsplash / Joseph Gonzalez (Authentic Portrait)',
     aiClues: 'Check the teeth alignment and edge transition where the collar fabric meets the neck in Image B.',
     difficulty: 'medium'
   }
@@ -121,26 +120,38 @@ const GameContext = createContext();
 
 export function GameProvider({ children }) {
   const { user } = useAuth();
-  const [currentRound, setCurrentRound] = useState(CLIENT_ROUNDS[0]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [revealData, setRevealData] = useState(null);
-  const [streak, setStreak] = useState(() => parseInt(localStorage.getItem('hvai_streak') || '0', 10));
-  const [bestStreak, setBestStreak] = useState(() => parseInt(localStorage.getItem('hvai_best') || '0', 10));
-  const [totalPlayed, setTotalPlayed] = useState(() => parseInt(localStorage.getItem('hvai_played') || '0', 10));
-  const [totalCorrect, setTotalCorrect] = useState(() => parseInt(localStorage.getItem('hvai_correct') || '0', 10));
+  const [currentRoundIndex, setCurrentRoundIndex] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [revealData, setRevealData] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [roundKey, setRoundKey] = useState(1);
-  const [playedIds, setPlayedIds] = useState([]);
 
-  useEffect(() => {
-    if (user && user.streak) {
-      setStreak(user.streak.currentStreak || 0);
-      setBestStreak(user.streak.bestStreak || 0);
-    }
-  }, [user]);
+  // Stats from localStorage
+  const [streak, setStreak] = useState(() => {
+    const saved = localStorage.getItem('hvai_streak');
+    return saved ? parseInt(saved, 10) : 0;
+  });
+  const [bestStreak, setBestStreak] = useState(() => {
+    const saved = localStorage.getItem('hvai_best');
+    return saved ? parseInt(saved, 10) : 0;
+  });
+  const [totalPlayed, setTotalPlayed] = useState(() => {
+    const saved = localStorage.getItem('hvai_played');
+    return saved ? parseInt(saved, 10) : 0;
+  });
+  const [totalCorrect, setTotalCorrect] = useState(() => {
+    const saved = localStorage.getItem('hvai_correct');
+    return saved ? parseInt(saved, 10) : 0;
+  });
 
-  // Sync to localStorage for instant persistence
+  // Filtered pool based on category
+  const filteredRounds = GAME_ROUNDS.filter(r => 
+    selectedCategory === 'All' || r.category.toLowerCase() === selectedCategory.toLowerCase()
+  );
+
+  const currentRound = filteredRounds[currentRoundIndex % filteredRounds.length] || GAME_ROUNDS[0];
+
+  // Sync to localStorage
   useEffect(() => {
     localStorage.setItem('hvai_streak', streak.toString());
     localStorage.setItem('hvai_best', bestStreak.toString());
@@ -148,74 +159,43 @@ export function GameProvider({ children }) {
     localStorage.setItem('hvai_correct', totalCorrect.toString());
   }, [streak, bestStreak, totalPlayed, totalCorrect]);
 
-  const fetchNextRound = async (categoryArg) => {
-    const cat = (typeof categoryArg === 'string' && categoryArg !== '') ? categoryArg : selectedCategory;
-    
-    // 1. Immediately reset reveal data so cards clear right away!
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category);
+    setCurrentRoundIndex(0);
     setRevealData(null);
-    setLoading(true);
-    setError(null);
-    try { sound.playNext(); } catch (e) {}
-
-    try {
-      const currentId = currentRound ? currentRound.id : null;
-      const res = await API.getRound(cat, currentId);
-
-      if (res && res.round && res.round.id !== currentId) {
-        setCurrentRound(res.round);
-        setPlayedIds(prev => [...prev, res.round.id]);
-      } else {
-        // Instant Client-side rotation fallback across the curated pool
-        const pool = CLIENT_ROUNDS.filter(r => 
-          r.id !== currentId && (cat === 'All' || r.category === cat)
-        );
-        const next = pool.length > 0 ? pool[Math.floor(Math.random() * pool.length)] : CLIENT_ROUNDS[0];
-        setCurrentRound(next);
-      }
-    } catch (err) {
-      console.warn('Network round fetch fallback:', err.message);
-      const currentId = currentRound ? currentRound.id : null;
-      const pool = CLIENT_ROUNDS.filter(r => 
-        r.id !== currentId && (cat === 'All' || r.category === cat)
-      );
-      const next = pool.length > 0 ? pool[Math.floor(Math.random() * pool.length)] : CLIENT_ROUNDS[0];
-      setCurrentRound(next);
-    } finally {
-      setRoundKey(prev => prev + 1);
-      setLoading(false);
-    }
+    setRoundKey(prev => prev + 1);
   };
 
-  const submitGuess = async (chosenSlot) => {
+  const fetchNextRound = (categoryArg) => {
+    setLoading(true);
+    setRevealData(null);
+    try { sound.playNext(); } catch (e) {}
+
+    setTimeout(() => {
+      if (typeof categoryArg === 'string' && categoryArg !== '') {
+        setSelectedCategory(categoryArg);
+      }
+      setCurrentRoundIndex(prev => prev + 1);
+      setRoundKey(prev => prev + 1);
+      setLoading(false);
+    }, 150);
+  };
+
+  const submitGuess = (chosenSlot) => {
     if (!currentRound || revealData) return;
-    
-    // Check answer against active round
+
     const isCorrect = chosenSlot === currentRound.aiSlot;
 
-    try {
-      // Send guess to backend
-      const res = await API.submitGuess(currentRound.id, chosenSlot);
-      setRevealData({
-        ...res,
-        aiSlot: currentRound.aiSlot || res.aiSlot,
-        correct: isCorrect,
-        prompt: currentRound.prompt || res.prompt,
-        realSource: currentRound.realSource || res.realSource,
-        aiClues: currentRound.aiClues || res.aiClues,
-        accuracyRate: res.accuracyRate || (isCorrect ? 62 : 44)
-      });
-    } catch (err) {
-      // Local calculation fallback if offline/error
-      setRevealData({
-        correct: isCorrect,
-        aiSlot: currentRound.aiSlot || 'B',
-        chosenSlot,
-        prompt: currentRound.prompt || 'Photorealistic image synthesis on matched subject theme.',
-        realSource: currentRound.realSource || 'Unsplash Verified Photography',
-        aiClues: currentRound.aiClues || 'Inspect specular highlights, edge smoothing, and hair boundaries.',
-        accuracyRate: isCorrect ? 58 : 45
-      });
-    }
+    // Instant accurate reveal
+    setRevealData({
+      correct: isCorrect,
+      aiSlot: currentRound.aiSlot,
+      chosenSlot,
+      prompt: currentRound.prompt,
+      realSource: currentRound.realSource,
+      aiClues: currentRound.aiClues,
+      accuracyRate: isCorrect ? 64 : 42
+    });
 
     setTotalPlayed(prev => prev + 1);
 
@@ -226,15 +206,13 @@ export function GameProvider({ children }) {
       setStreak(newStreak);
       if (newStreak > bestStreak) setBestStreak(newStreak);
 
-      // Milestone Confetti
-      if (newStreak % 3 === 0 || newStreak >= 5) {
-        confetti({
-          particleCount: 100,
-          spread: 80,
-          origin: { y: 0.55 },
-          colors: ['#6366F1', '#06B6D4', '#10B981', '#F59E0B', '#EC4899']
-        });
-      }
+      // Confetti celebration
+      confetti({
+        particleCount: 120,
+        spread: 80,
+        origin: { y: 0.6 },
+        colors: ['#06B6D4', '#8B5CF6', '#10B981', '#F59E0B']
+      });
     } else {
       try { sound.playWrong(); } catch (e) {}
       setStreak(0);
@@ -246,14 +224,13 @@ export function GameProvider({ children }) {
       currentRound,
       revealData,
       loading,
-      error,
       streak,
       bestStreak,
       totalPlayed,
       totalCorrect,
       selectedCategory,
       roundKey,
-      setSelectedCategory,
+      setSelectedCategory: handleCategorySelect,
       fetchNextRound,
       submitGuess
     }}>
