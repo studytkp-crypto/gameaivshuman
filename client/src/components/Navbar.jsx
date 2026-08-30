@@ -3,7 +3,7 @@ import { Eye, Flame, Crown, Trophy, User, LogOut, ShieldCheck, Zap } from 'lucid
 import { useAuth } from '../context/AuthContext';
 import { useGame } from '../context/GameContext';
 
-export function Navbar({ activePage, setActivePage, openAuthModal }) {
+export function Navbar({ activePage, setActivePage, openAuthModal, onOpenMindset }) {
   const { user, logout } = useAuth();
   const { streak, remainingPlays } = useGame();
 
@@ -52,6 +52,12 @@ export function Navbar({ activePage, setActivePage, openAuthModal }) {
             }`}
           >
             🏆 Leaderboard
+          </button>
+          <button
+            onClick={() => onOpenMindset && onOpenMindset()}
+            className="px-3.5 py-1.5 rounded-lg text-xs font-bold text-brand-cyan hover:text-white bg-brand-cyan/10 hover:bg-brand-cyan/20 border border-brand-cyan/30 transition-all flex items-center gap-1.5"
+          >
+            <span>🧠</span> <span>AI Hunter's Mindset</span>
           </button>
           <button
             onClick={() => setActivePage('pricing')}

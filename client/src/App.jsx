@@ -12,6 +12,7 @@ import { AdminPage } from './pages/AdminPage';
 import { DailyChallenge } from './components/DailyChallenge';
 import { ShareModal } from './components/ShareModal';
 import { PrivacyModal } from './components/PrivacyModal';
+import { MindsetGuideModal } from './components/MindsetGuideModal';
 import { X, Lock, Mail, User as UserIcon } from 'lucide-react';
 
 function AppContent() {
@@ -20,6 +21,7 @@ function AppContent() {
   const [authMode, setAuthMode] = useState('login'); // 'login' | 'register'
   const [showShareModal, setShowShareModal] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+  const [showMindsetModal, setShowMindsetModal] = useState(false);
 
   // Auth Form State
   const [email, setEmail] = useState('');
@@ -66,6 +68,7 @@ function AppContent() {
         activePage={activePage}
         setActivePage={setActivePage}
         openAuthModal={handleOpenAuth}
+        onOpenMindset={() => setShowMindsetModal(true)}
       />
 
       {/* Main Page Viewport */}
@@ -105,6 +108,11 @@ function AppContent() {
         setActivePage={setActivePage} 
         onOpenPrivacy={() => setShowPrivacyModal(true)}
       />
+
+      {/* Mindset & Strategy Guide Modal */}
+      {showMindsetModal && (
+        <MindsetGuideModal onClose={() => setShowMindsetModal(false)} />
+      )}
 
       {/* Privacy Policy & Terms Modal */}
       {showPrivacyModal && (
